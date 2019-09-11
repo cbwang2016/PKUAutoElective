@@ -90,6 +90,10 @@ class AutoElectiveConfig(BaseConfig):
         return self.getfloat("client", "random_deviation")
 
     @property
+    def iaaaReloginInterval(self):
+        return self.getfloat("client", "iaaa_relogin_interval")
+
+    @property
     def iaaaClientTimeout(self):
         return self.getfloat("client", "iaaa_client_timeout")
 

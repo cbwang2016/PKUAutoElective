@@ -219,6 +219,7 @@ def _thread_login_loop(status):
                 _ = elective.sso_login_dual_degree(sida, sttp, referer)
 
             cout.info("Login success (client: %s)" % elective.id)
+            _task_validate_captcha(elective)
 
             electivePool.put_nowait(elective)
             elective = None
@@ -407,7 +408,7 @@ def _thread_main_loop(goals, ignored, status):
                 course = queue.popleft()
                 cout.info("Try to elect %s" % course)
 
-                _task_validate_captcha(elective)
+                # _task_validate_captcha(elective)
 
                 retryRequired = True
                 while retryRequired:
@@ -560,6 +561,9 @@ def main(signals=None, goals=None, ignored=None, status=None):
     try:
         for t in tList:
             t.join()
+    except KeyboardInterrupt as e:
+        cout.info("KeyboardInterrupt!!!")
+        raise e
     except Exception as e:
         raise e
     finally:

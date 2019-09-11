@@ -5,6 +5,7 @@
 
 __all__ = ["ElectiveClient"]
 
+import time
 import random
 from .client import BaseClient
 from .hook import *
@@ -61,6 +62,7 @@ class ElectiveClient(BaseClient):
 
     def __init__(self, id):
         super(ElectiveClient, self).__init__()
+        self._token_expired_time = time.time() + _config.iaaaReloginInterval
         self._id = id
 
     @property
@@ -69,7 +71,7 @@ class ElectiveClient(BaseClient):
 
     @property
     def hasLogined(self):
-        return len(self._session.cookies) > 0
+        return len(self._session.cookies) > 0 and time.time() < self._token_expired_time
 
 
     def sso_login(self, token, **kwargs):
