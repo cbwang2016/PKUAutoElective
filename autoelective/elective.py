@@ -88,6 +88,7 @@ class ElectiveClient(BaseClient):
             hooks=_hooks_check_title,
             **kwargs,
         ) # 无 Referer
+        self._token_expired_time = time.time() + _config.iaaaReloginInterval
         return r
 
     def sso_login_dual_degree(self, sida, sttp, referer, **kwargs):
@@ -105,6 +106,7 @@ class ElectiveClient(BaseClient):
             hooks=_hooks_check_title,
             **kwargs,
         )
+        self._token_expired_time = time.time() + _config.iaaaReloginInterval
         return r
 
     def logout(self, **kwargs):

@@ -561,9 +561,6 @@ def main(signals=None, goals=None, ignored=None, status=None):
     try:
         for t in tList:
             t.join()
-    except KeyboardInterrupt as e:
-        cout.info("KeyboardInterrupt!!!")
-        raise e
     except Exception as e:
         raise e
     finally:
