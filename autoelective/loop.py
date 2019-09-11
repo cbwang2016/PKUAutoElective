@@ -141,7 +141,7 @@ def _task_print_ignored(ignored):
 def _task_validate_captcha(elective):
     """ 填一次验证码 """
     while True:
-        cout.info("Fetch a captcha")
+        cout.info("Fetch a captcha (client: %s)" % elective.id)
         r = elective.get_DrawServlet()
         captcha = recognizer.recognize(r.content)
         code = captcha.code
