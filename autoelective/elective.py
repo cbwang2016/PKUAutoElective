@@ -62,7 +62,6 @@ class ElectiveClient(BaseClient):
 
     def __init__(self, id):
         super(ElectiveClient, self).__init__()
-        self._token_expired_time = time.time() + _config.iaaaReloginInterval
         self._id = id
 
     @property
@@ -71,8 +70,14 @@ class ElectiveClient(BaseClient):
 
     @property
     def hasLogined(self):
-        return len(self._session.cookies) > 0 and time.time() < self._token_expired_time
+        return len(self._session.cookies) > 0
 
+    @property
+    def captchaNeedsRefresh(self):
+        return time.time() > self._captcha_expire_time
+
+    def setCaptchaTime(self):
+        self._captcha_expire_time = time.time() + _config.captchaRefreshInterval
 
     def sso_login(self, token, **kwargs):
         r = self._get(
@@ -83,12 +88,11 @@ class ElectiveClient(BaseClient):
             },
             # 必须要随便指定一个 Cookie 否则无法会报 101 status_code
             headers={
-                "Cookie": "JSESSIONID=TH9sd1HBgw0k3RTFxMHKmWpPp4bMJ5FnTGn7WmvyH2JmTqNGgxpS!1984960435",
+                "Cookie": "JSESSIONID=RZ1Qd4rTThr3Y5yN2QL8PTRgnLVQhFz2NpJ17tyvNWnCGfGkpS7R!2042005199",
             },
             hooks=_hooks_check_title,
             **kwargs,
         ) # 无 Referer
-        self._token_expired_time = time.time() + _config.iaaaReloginInterval
         return r
 
     def sso_login_dual_degree(self, sida, sttp, referer, **kwargs):
@@ -106,7 +110,6 @@ class ElectiveClient(BaseClient):
             hooks=_hooks_check_title,
             **kwargs,
         )
-        self._token_expired_time = time.time() + _config.iaaaReloginInterval
         return r
 
     def logout(self, **kwargs):

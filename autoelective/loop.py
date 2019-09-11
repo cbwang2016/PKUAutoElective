@@ -163,6 +163,7 @@ def _task_validate_captcha(elective):
             cout.info("Validation failed, try again")
         else:
             cout.warning("Unknown validation result: %s" % validRes)
+    elective.setCaptchaTime()
 
 
 def _task_print_current_thread_killed():
@@ -347,6 +348,9 @@ def _thread_main_loop(goals, ignored, status):
             if not elective.hasLogined:
                 raise _ElectiveNeedsLogin  # quit this loop
 
+            if elective.captchaNeedsRefresh:
+                _task_validate_captcha(elective)
+
             # MARK: check supply/cancel page
 
             if page == 1:
@@ -478,7 +482,7 @@ def _thread_main_loop(goals, ignored, status):
             cout.warning("IAAAException encountered")
 
         except _ElectiveNeedsLogin as e:
-            cout.info("client: %s needs Login" % elective.id)
+            cout.warning("client %s needs Login" % elective.id)
             reloginPool.put_nowait(elective)
             elective = None
             shouldEnterNextLoopImmediately = True

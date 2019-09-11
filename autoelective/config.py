@@ -90,8 +90,8 @@ class AutoElectiveConfig(BaseConfig):
         return self.getfloat("client", "random_deviation")
 
     @property
-    def iaaaReloginInterval(self):
-        return self.getfloat("client", "iaaa_relogin_interval")
+    def captchaRefreshInterval(self):
+        return self.getfloat("client", "captcha_refresh_interval")
 
     @property
     def iaaaClientTimeout(self):
