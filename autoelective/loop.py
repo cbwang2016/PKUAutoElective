@@ -146,7 +146,11 @@ def _task_validate_captcha(elective):
     while True:
         cout.info("Fetch a captcha (client: %s)" % elective.id)
         r = elective.get_DrawServlet()
-        captcha = recognizer.recognize(r.content)
+        try:
+            captcha = recognizer.recognize(r.content) # 可能识别分割错误
+        except Exception as e:
+            ferr.error(e)
+            raise OperationFailedError(msg="Unable to recognize captcha")
         code = captcha.code
         cout.info("Recognition result: %s" % code)
 
