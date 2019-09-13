@@ -398,7 +398,11 @@ def _thread_main_loop(goals, ignored, status):
                 raise _ElectiveNeedsLogin  # quit this loop
 
             if elective.captchaNeedsRefresh:
-                _task_validate_captcha(elective)
+                try:
+                    _task_validate_captcha(elective)
+                except Exception as e:
+                    cout.warning("Captcha validation failed... relogin!")
+                    raise SessionExpiredError()
 
             # MARK: check supply/cancel page
 
